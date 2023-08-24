@@ -16,10 +16,7 @@
 <script setup lang="ts">
 
 import { Shape, Edge, Graph } from '@antv/x6'
-
-import OrganizationChart, {
-  OrganizationNode,
-} from './components/organization-chart.vue'
+import { OrganizationChart, OrganizationNode } from '@example/x6'
 
 const data: OrganizationNode[] = [
   {

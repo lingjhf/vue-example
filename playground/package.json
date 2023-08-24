@@ -15,7 +15,8 @@
     "@example/echarts": "workspace:^",
     "@example/element-plus": "workspace:^",
     "@example/x6": "workspace:^",
-    "vue-router": "4"
+    "vue-router": "4",
+    "dagre": "^0.8.5"
   },
   "devDependencies": {
     "@unocss/reset": "^0.55.2",

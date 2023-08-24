@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "esnext",
-    "lib": ["esnext"],
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
@@ -10,6 +9,7 @@
     "resolveJsonModule": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
+    "noEmit": true,
     "jsx": "preserve",
     "types": ["node", "vite/client"],
     "paths": {

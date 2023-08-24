@@ -20,7 +20,7 @@ export default defineConfig({
     target: 'esnext',
     rollupOptions: {
       output: {
-        manualChunks: { vue: ['vue'], dagre: ['dagre'], x6: ['@antv/x6'] }
+        manualChunks: { vue: ['vue'], 'vue-router': ['vue-router'] }
       }
     }
   },

@@ -97,6 +97,9 @@ importers:
       '@example/x6':
         specifier: workspace:^
         version: link:../packages/x6
+      dagre:
+        specifier: ^0.8.5
+        version: 0.8.5
       vue-router:
         specifier: '4'
         version: 4.2.4(vue@3.3.4)
