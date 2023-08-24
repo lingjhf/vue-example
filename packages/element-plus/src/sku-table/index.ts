@@ -1,0 +1,1 @@
+export { default as SkuTable } from './sku-table.vue'

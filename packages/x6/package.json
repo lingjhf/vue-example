@@ -1,0 +1,16 @@
+{
+  "name": "@example/x6",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@antv/x6": "^2.13.1",
+    "dagre": "^0.8.5"
+  }
+}

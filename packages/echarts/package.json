@@ -1,0 +1,16 @@
+{
+  "name": "@example/echarts",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "dayjs": "^1.11.9",
+    "echarts": "^5.4.3"
+  }
+}

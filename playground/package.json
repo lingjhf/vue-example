@@ -1,0 +1,24 @@
+{
+  "name": "@example/playground",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@antv/x6": "^2.13.1",
+    "@example/amap": "workspace:^",
+    "@example/echarts": "workspace:^",
+    "@example/element-plus": "workspace:^",
+    "@example/x6": "workspace:^",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@unocss/reset": "^0.55.2",
+    "unocss": "^0.53.0"
+  }
+}

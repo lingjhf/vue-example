@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "jsx": "preserve",
+    "types": ["node", "vite/client"],
+    "paths": {
+      "@example/x6": ["./packages/x6/src/index.ts"],
+      "@example/echarts": ["./packages/echarts/src/index.ts"],
+      "@example/amap": ["./packages/amap/src/index.ts"]
+    }
+  },
+  "include": ["packages"],
+  "exclude": ["**/dist/**", "**/node_modules/**", "**/playground/**"]
+}
