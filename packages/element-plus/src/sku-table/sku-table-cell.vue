@@ -6,6 +6,7 @@
     <input
       v-if='props.editable'
       :value='inputValue'
+      @blur='valueBlur'
       @input='valueChange'
     >
     <span v-else>{{ inputValue }}</span>
@@ -45,10 +46,18 @@ watch(() => props.modelValue,
 function valueChange(e: Event) {
   const target = e.target as HTMLInputElement
   const number = getNumber(target.value)
-
   target.value = number === undefined ? inputValue.value : number
   if (typeof props.editable === 'function') {
     target.value = props.editable(target.value)
+  }
+  inputValue.value = target.value
+  emits('update:modelValue', inputValue.value)
+}
+
+function valueBlur(e: Event) {
+  const target = e.target as HTMLInputElement
+  if (target.value === '-') {
+    target.value = '0'
   }
   inputValue.value = target.value
   emits('update:modelValue', inputValue.value)

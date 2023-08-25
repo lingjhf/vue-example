@@ -26,9 +26,10 @@
           <sku-table-cell
             v-for='(item,index) in row[column.prop]'
             :key='index'
+            v-model='item.value'
             :background-color='item.backgroundColor'
             :editable='item.editable'
-            :model-value='item.value'
+            @update:model-value='cellChange'
           />
         </div>
         <div v-else>
@@ -64,26 +65,28 @@ interface SkuTableCellProps{
   backgroundColor?: string
 }
 
-interface SkuTable {
+interface SkuTableProps {
   title: string
   xAxis?: XAxisItem[]
   yAxis?: YAxisItem[]
-  data?: Record<string, SkuTableCellProps[]>[]
+  modelValue?: Record<string, SkuTableCellProps[]>[]
 }
 
 const props = withDefaults(
-  defineProps<SkuTable>(), 
+  defineProps<SkuTableProps>(), 
   { 
     xAxis: () => [], 
     yAxis: () => [],
-    data: () => [], 
+    modelValue: () => [], 
   }
 )
+
+const emits = defineEmits<{(e: 'update:modelValue', value: Record<string, SkuTableCellProps[]>[]): void}>()
 
 const skuData = ref<Record<string, SkuTableCellProps[] | AxisItem>[]>([])
 
 watch(
-  () => props.data, 
+  () => props.modelValue, 
   () => {
     initSkuData()
   }, 
@@ -95,7 +98,7 @@ watch(
 function initSkuData() {
   const data: Record<string, SkuTableCellProps[] | AxisItem>[] = []
   for (let i = 0;i < props.yAxis.length;i++) {
-    const row = props.data[i]
+    const row = props.modelValue[i]
     let r = { yAxis: props.yAxis[i] }
     if (row) {
       r = { ...r, ...row }
@@ -103,6 +106,16 @@ function initSkuData() {
     data.push(r)
   }
   skuData.value = data 
+}
+
+function cellChange() {
+
+  const data: Record<string, SkuTableCellProps[]>[] = []
+  for (const [index, item] of props.modelValue.entries()) {
+    data[index] = item
+  }
+  console.log(data)
+  emits('update:modelValue', data)
 }
 </script>
 
