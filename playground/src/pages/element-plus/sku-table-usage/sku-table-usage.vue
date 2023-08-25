@@ -1,7 +1,7 @@
 <template>
   <div>
     <sku-table
-      :data='data'
+      v-model='data'
       title='测试-110'
       :x-axis='xAxis'
       :y-axis='yAxis'
@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { SkuTable } from '@example/element-plus'
-
+import { ref } from 'vue'
 const xAxis = [
   {
     label: '58/S', prop: 'a',
@@ -42,7 +42,7 @@ const yAxis = [
   }
 ]
 
-const data = [
+const data = ref([
   {
     a: [{
       value: '100',
@@ -76,7 +76,7 @@ const data = [
       backgroundColor: '#f56c6c'
     }],
   }
-]
+])
 
 </script>
 
