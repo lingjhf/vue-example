@@ -19,10 +19,12 @@ export const routes: RouteRecordRaw[] = [
     path: '/',
     name: RouteName.home,
     component: () => import('@/pages/home'),
-  },
-  {
-    path: '/element-plus/sku-table',
-    component: () => import('@/pages/element-plus/sku-table-usage')
+    children: [
+      {
+        path: '/element-plus/sku-table',
+        component: () => import('@/pages/element-plus/sku-table-usage')
+      }
+    ]
   },
   {
     path: '/:pathMatch(.*)*',

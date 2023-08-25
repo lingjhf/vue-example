@@ -16,7 +16,8 @@
     "@example/element-plus": "workspace:^",
     "@example/x6": "workspace:^",
     "dagre": "^0.8.5",
-    "vue-router": "4"
+    "vue-router": "4",
+    "element-plus": "^2.3.9"
   },
   "devDependencies": {
     "@example/playground": "workspace:^",
