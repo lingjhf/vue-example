@@ -46,7 +46,7 @@
 import { ElTable, ElTableColumn } from 'element-plus'
 import { watch, ref } from 'vue'
 
-import SkuTableCell from './sku-table-cell.vue'
+import SkuTableCell, { SkuTableCellProps } from './sku-table-cell.vue'
 
 interface AxisItem {
   label: string
@@ -59,12 +59,6 @@ interface XAxisItem extends AxisItem{
 }
 
 type YAxisItem = AxisItem
-
-interface SkuTableCellProps{
-  value?: string
-  editable?: boolean | ((value: string) => string)
-  backgroundColor?: string
-}
 
 interface SkuTableProps {
   title: string

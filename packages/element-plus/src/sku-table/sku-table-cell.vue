@@ -1,12 +1,14 @@
 <template>
   <div class='sku-table-cell'>
     <div
+      
       v-if='props.editable'
-      class='sku-table-input-wrap'
+      class='sku-table-input'
+      :style='{backgroundColor:props.backgroundColor}'
     >
-      <div
-        class='sku-table-input'
-        :style='{backgroundColor:props.backgroundColor}'
+      <el-tooltip
+        :content='errorMessage'
+        :visible='!!errorMessage'
       >
         <input
        
@@ -15,30 +17,25 @@
           @blur='valueBlur'
           @input='valueChange'
         >
-      </div>
-      <div
-        v-if='errorMessage'
-        class='sku-table-cell-error'
-      >
-        {{ errorMessage }}
-      </div>
+      </el-tooltip>
     </div>
     <span v-else>{{ inputValue }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ElTooltip } from 'element-plus'
+import { ref, watch, } from 'vue'
 
 interface SkuTableCellEditableValue {
   value: string
-  error: string
+  error?: string
 }
 
 export interface SkuTableCellProps {
     modelValue?: string
     placeholder?: string
-    editable?: boolean | ((value: string) => string)
+    editable?: boolean | ((value: string) => SkuTableCellEditableValue)
     backgroundColor?: string
 }
 
@@ -46,7 +43,7 @@ const props = withDefaults(
   defineProps<SkuTableCellProps>(), 
   {
     modelValue: '--',
-    placeholder: '',
+    placeholder: undefined,
     editable: false,
     backgroundColor: '',
   }
@@ -71,17 +68,9 @@ function valueChange(e: Event) {
   const number = getNumber(target.value)
   target.value = number === undefined ? inputValue.value : number
   if (typeof props.editable === 'function') {
-    try {
-      target.value = props.editable(target.value)
-      errorMessage.value = ''
-    } catch (e) {
-      const err = e as Error
-      if (errorMessage.value != err.message) {
-        errorMessage.value = err.message
-      }
-      target.value = inputValue.value
-      return
-    }
+    const { value, error } = props.editable(target.value)
+    errorMessage.value = error ? error : ''
+    target.value = value
   }
   inputValue.value = target.value
   emits('update:modelValue', inputValue.value)
@@ -89,6 +78,11 @@ function valueChange(e: Event) {
 
 function valueBlur(e: Event) {
   const target = e.target as HTMLInputElement
+  if (typeof props.editable === 'function') {
+    const { value, error } = props.editable(target.value)
+    errorMessage.value = error ? error : ''
+    target.value = value
+  }
   if (target.value === '-') {
     target.value = '0'
   }
@@ -100,7 +94,10 @@ function getNumber(value: string) {
   let numberValue = value
   const regex = /^-?\d+(\.\d+)?$/
   if (value === '') {
-    return ''
+    if (props.placeholder !== undefined) {
+      return ''
+    }
+    return '0'
   } else if (numberValue === '0-' || numberValue === '-') {
     return '-'
   } else if (!regex.test(numberValue)) {
@@ -124,12 +121,6 @@ function getNumber(value: string) {
   width: 100%;
   background-color: transparent;
   text-align: center;
-}
-.sku-table-input-wrap{
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: center;
 }
 .sku-table-input{
   display: flex;

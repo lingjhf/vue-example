@@ -49,9 +49,9 @@ const data = ref([
       placeholder: '200',
       editable(value: string) {
         if (Number(value) > 200) {
-          throw Error('不能超出200')
+          return { value: '200', error: '数量不能超过200' }
         }
-        return value
+        return { value }
       },
       backgroundColor: '#1890ff'
     }],
@@ -60,9 +60,9 @@ const data = ref([
         value: '200',
         editable: (value: string) => {
           if (Number(value) < 0) {
-            return '0'
+            return { value: '0', error: '数量不能小于0' }
           }
-          return value
+          return { value }
         },
         backgroundColor: '#1890ff'
       },
