@@ -4,9 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview",
+    "build:playground": "pnpm run --filter @example/playground build",
     "lint": "eslint ."
   },
   "dependencies": {
