@@ -5,6 +5,10 @@ export abstract class RouteName {
     return 'home'
   }
 
+  static get elementPlusSkuTable() {
+    return 'elementPlusSkuTable'
+  }
+
   static get notFound() {
     return 'notFound'
   }
@@ -15,6 +19,10 @@ export const routes: RouteRecordRaw[] = [
     path: '/',
     name: RouteName.home,
     component: () => import('@/pages/home'),
+  },
+  {
+    path: '/element-plus/sku-table',
+    component: () => import('@/pages/element-plus/sku-table-usage')
   },
   {
     path: '/:pathMatch(.*)*',

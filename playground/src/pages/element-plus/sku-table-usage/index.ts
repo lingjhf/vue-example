@@ -1,0 +1,1 @@
+export { default } from './sku-table-usage.vue'

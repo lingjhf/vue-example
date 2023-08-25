@@ -15,11 +15,13 @@
     "@example/echarts": "workspace:^",
     "@example/element-plus": "workspace:^",
     "@example/x6": "workspace:^",
-    "vue-router": "4",
-    "dagre": "^0.8.5"
+    "dagre": "^0.8.5",
+    "vue-router": "4"
   },
   "devDependencies": {
+    "@example/playground": "workspace:^",
     "@unocss/reset": "^0.55.2",
-    "unocss": "^0.53.0"
+    "unocss": "^0.53.0",
+    "unplugin-element-plus": "^0.8.0"
   }
 }
