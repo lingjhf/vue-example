@@ -29,6 +29,7 @@
             v-model='item.value'
             :background-color='item.backgroundColor'
             :editable='item.editable'
+            :placeholder='item.placeholder'
             @update:model-value='cellChange'
           />
         </div>

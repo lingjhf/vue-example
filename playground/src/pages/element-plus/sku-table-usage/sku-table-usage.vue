@@ -45,10 +45,11 @@ const yAxis = [
 const data = ref([
   {
     a: [{
-      value: '100',
+      value: '20',
+      placeholder: '200',
       editable(value: string) {
         if (Number(value) > 200) {
-          return '200'
+          throw Error('不能超出200')
         }
         return value
       },
