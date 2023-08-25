@@ -109,12 +109,10 @@ function initSkuData() {
 }
 
 function cellChange() {
-
   const data: Record<string, SkuTableCellProps[]>[] = []
   for (const [index, item] of props.modelValue.entries()) {
     data[index] = item
   }
-  console.log(data)
   emits('update:modelValue', data)
 }
 </script>
