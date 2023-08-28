@@ -1,1 +1,2 @@
-export { default as SkuTable } from './sku-table.vue'
+export { default as SkuTable, type SkuTableProps, type SkuTableAxisItem, type SkuTableValue } from './sku-table.vue'
+export { type SkuTableCellEditableValue, type SkuTableCellProps } from './sku-table-cell.vue'

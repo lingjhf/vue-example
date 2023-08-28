@@ -4,6 +4,7 @@
     :data='skuData'
   >
     <el-table-column
+      fixed
       :label='props.title'
       prop='yAxis'
     >
@@ -14,7 +15,6 @@
     <el-table-column
       v-for='column in props.xAxis'
       :key='column.prop'
-      :align='column.align ?? "center"'
       :label='column.label'
       :prop='column.prop'
     >
@@ -26,9 +26,11 @@
           <sku-table-cell
             v-for='(item,index) in row[column.prop]'
             :key='index'
-            v-model='item.value'
+            v-model:value='item.value'
             :background-color='item.backgroundColor'
+            :color='item.color'
             :editable='item.editable'
+            :meta='item.meta'
             :placeholder='item.placeholder'
             @update:model-value='cellChange'
           />
@@ -48,23 +50,18 @@ import { watch, ref } from 'vue'
 
 import SkuTableCell, { SkuTableCellProps } from './sku-table-cell.vue'
 
-interface AxisItem {
+export interface SkuTableAxisItem {
   label: string
   prop: string
-  slot?: string
 }
 
-interface XAxisItem extends AxisItem{
-  align?: string
-}
+export type SkuTableValue = Record<string, SkuTableCellProps[]>
 
-type YAxisItem = AxisItem
-
-interface SkuTableProps {
+export interface SkuTableProps {
   title: string
-  xAxis?: XAxisItem[]
-  yAxis?: YAxisItem[]
-  modelValue?: Record<string, SkuTableCellProps[]>[]
+  xAxis?: SkuTableAxisItem[]
+  yAxis?: SkuTableAxisItem[]
+  modelValue?: SkuTableValue[]
 }
 
 const props = withDefaults(
@@ -78,10 +75,10 @@ const props = withDefaults(
 
 const emits = defineEmits<{(e: 'update:modelValue', value: Record<string, SkuTableCellProps[]>[]): void}>()
 
-const skuData = ref<Record<string, SkuTableCellProps[] | AxisItem>[]>([])
+const skuData = ref<Record<string, SkuTableCellProps[] | SkuTableAxisItem>[]>([])
 
 watch(
-  () => props.modelValue, 
+  [() => props.modelValue, () => props.xAxis, () => props.yAxis], 
   () => {
     initSkuData()
   }, 
@@ -91,7 +88,7 @@ watch(
 )
 
 function initSkuData() {
-  const data: Record<string, SkuTableCellProps[] | AxisItem>[] = []
+  const data: Record<string, SkuTableCellProps[] | SkuTableAxisItem>[] = []
   for (let i = 0;i < props.yAxis.length;i++) {
     const row = props.modelValue[i]
     let r = { yAxis: props.yAxis[i] }
@@ -104,7 +101,7 @@ function initSkuData() {
 }
 
 function cellChange() {
-  const data: Record<string, SkuTableCellProps[]>[] = []
+  const data: SkuTableValue[] = []
   for (const [index, item] of props.modelValue.entries()) {
     data[index] = item
   }
@@ -123,6 +120,7 @@ function cellChange() {
   height: 100%;
   align-items: center;
   justify-content: center;
+  padding: 0;
 }
 
 .sku-table-cell-wrap{

@@ -1,17 +1,17 @@
 <template>
-  <div class='sku-table-cell'>
+  <div
+    class='sku-table-cell'
+    :style='{backgroundColor:props.backgroundColor,color:props.color}'
+  >
     <div
-      
       v-if='props.editable'
       class='sku-table-input'
-      :style='{backgroundColor:props.backgroundColor}'
     >
       <el-tooltip
         :content='errorMessage'
         :visible='!!errorMessage'
       >
         <input
-       
           :placeholder='props.placeholder'
           :value='inputValue'
           @blur='valueBlur'
@@ -27,36 +27,40 @@
 import { ElTooltip } from 'element-plus'
 import { ref, watch, } from 'vue'
 
-interface SkuTableCellEditableValue {
+export interface SkuTableCellEditableValue {
   value: string
   error?: string
 }
 
 export interface SkuTableCellProps {
-    modelValue?: string
+    value?: string
     placeholder?: string
-    editable?: boolean | ((value: string) => SkuTableCellEditableValue)
+    editable?: boolean | ((value: string, meta?: any) => SkuTableCellEditableValue)
     backgroundColor?: string
+    color?: string
+    meta?: any
 }
 
 const props = withDefaults(
   defineProps<SkuTableCellProps>(), 
   {
-    modelValue: '--',
+    value: '--',
     placeholder: undefined,
     editable: false,
     backgroundColor: '',
+    color: '',
+    meta: undefined
   }
 )
 
-const emits = defineEmits<{(e: 'update:modelValue', value: string): void}>()
+const emits = defineEmits<{(e: 'update:value', value: string): void}>()
 
 const inputValue = ref('')
 const errorMessage = ref('')
 
-watch(() => props.modelValue, 
+watch(() => props.value, 
   () => {
-    inputValue.value = props.modelValue
+    inputValue.value = props.value
   },
   {
     immediate: true
@@ -68,18 +72,18 @@ function valueChange(e: Event) {
   const number = getNumber(target.value)
   target.value = number === undefined ? inputValue.value : number
   if (typeof props.editable === 'function') {
-    const { value, error } = props.editable(target.value)
+    const { value, error } = props.editable(target.value, props.meta)
     errorMessage.value = error ? error : ''
     target.value = value
   }
   inputValue.value = target.value
-  emits('update:modelValue', inputValue.value)
+  emits('update:value', inputValue.value)
 }
 
 function valueBlur(e: Event) {
   const target = e.target as HTMLInputElement
   if (typeof props.editable === 'function') {
-    const { value, error } = props.editable(target.value)
+    const { value, error } = props.editable(target.value, props.meta)
     errorMessage.value = error ? error : ''
     target.value = value
   }
@@ -87,7 +91,7 @@ function valueBlur(e: Event) {
     target.value = '0'
   }
   inputValue.value = target.value
-  emits('update:modelValue', inputValue.value)
+  emits('update:value', inputValue.value)
 }
 
 function getNumber(value: string) {
@@ -126,6 +130,9 @@ function getNumber(value: string) {
   display: flex;
   align-items: center;
   height: 100%;
+}
+.sku-table-input>input{
+  color: inherit;
 }
 .sku-table-cell-error{
   line-height: 16px;
