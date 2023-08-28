@@ -10,7 +10,7 @@
       </div>
     </template>
     <template #aside>
-      <el-menu
+      <!-- <el-menu
         class='h-full'
         :default-active='activeMenu'
         router
@@ -45,7 +45,7 @@
           </template>
           <el-menu-item />
         </el-sub-menu>
-      </el-menu>
+      </el-menu> -->
     </template>
     <template #main>
       <router-view />
