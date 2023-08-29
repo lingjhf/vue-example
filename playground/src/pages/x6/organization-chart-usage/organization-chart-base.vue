@@ -7,7 +7,6 @@
         :render-node='renderNode'
         :set-graph='setGraph'
         style='width: 100%; height: 100%'
-        @click='test'
       />
     </div>
   </div>
@@ -103,10 +102,6 @@ const data: OrganizationNode[] = [
   },
 ]
 
-function test() {
-  console.log('ok')
-}
-
 function setGraph(graph: Graph) {
   graph.zoomTo(0.8).enableMouseWheel().enablePanning()
   graph.mousewheel.options.mousewheel.modifiers = ['ctrl', 'meta']
@@ -154,8 +149,8 @@ body {
   margin: 0;
 }
 .container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

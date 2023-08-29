@@ -1,1 +1,1 @@
-export { default as OrganizationChart, OrganizationNode } from './organization-chart.vue'
+export { default as OrganizationChart, type OrganizationNode } from './organization-chart.vue'

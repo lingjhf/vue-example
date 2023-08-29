@@ -23,6 +23,10 @@ export const routes: RouteRecordRaw[] = [
       {
         path: '/element-plus/sku-table',
         component: () => import('@/pages/element-plus/sku-table-usage')
+      },
+      {
+        path: '/x6/organization-chart',
+        component: () => import('@/pages/x6/organization-chart-usage')
       }
     ]
   },
