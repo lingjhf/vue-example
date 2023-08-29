@@ -160,7 +160,7 @@ function setGraph(value: Graph) {
   value.mousewheel.options.mousewheel.modifiers = ['ctrl', 'meta']
   value.mousewheel.options.mousewheel.guard = (e) => {
     e.preventDefault()
-    if (!e.ctrlKey || !e.metaKey) {
+    if (!e.ctrlKey && !e.metaKey) {
       return false
     }
     const z = value.zoom()
