@@ -13,6 +13,8 @@ export interface OrganizationNode {
   children?: OrganizationNode[];
 }
 
+export type OrganizationChartDirection = 'LR' | 'RL' | 'TB' | 'BT'
+
 interface OrganizationFlatNode {
   key: string;
   parent?: OrganizationFlatNode;
@@ -27,7 +29,7 @@ interface NodeTerminalData {
 const props = withDefaults(
   defineProps<{
     data?: OrganizationNode[];
-    direction?: 'LR' | 'RL' | 'TB' | 'BT';
+    direction?: OrganizationChartDirection;
     nodeSep?: number;
     rankSep?: number;
     autoResize?: boolean;
@@ -93,7 +95,7 @@ function autoLayout() {
   const nodes = graph.getNodes()
   const edges = graph.getEdges()
   const g = new dagre.graphlib.Graph()
-  g.setGraph({ rankdir: 'LR', nodesep: props.nodeSep, ranksep: props.rankSep })
+  g.setGraph({ rankdir: props.direction, nodesep: props.nodeSep, ranksep: props.rankSep })
   g.setDefaultEdgeLabel(() => ({}))
 
   const width = 260
@@ -119,22 +121,66 @@ function autoLayout() {
   })
 
   edges.forEach((edge) => {
-    const source = edge.getSourceNode()!
-    const target = edge.getTargetNode()!
-    const sourceBBox = source.getBBox()
-    const targetBBox = target.getBBox()
-
-    if (sourceBBox.y !== targetBBox.y) {
-      const gap = targetBBox.x - sourceBBox.x - sourceBBox.width
-
-      const fix = sourceBBox.width
-      const x = sourceBBox.x + fix + gap / 2
-      edge.setVertices([
-        { x, y: sourceBBox.center.y },
-        { x, y: targetBBox.center.y },
-      ])
+    switch (props.direction) {
+      case 'LR':
+        setEdgeVerticesLR(edge)
+        break
+      case 'RL':
+        setEdgeVerticesRL(edge)
+        break
+      case 'TB':
+        setEdgeVerticesTB(edge)
+        break
+      case 'BT':
+        setEdgeVerticesBT(edge)
+        break
     }
   })
+}
+
+function setEdgeVerticesLR(edge: Edge<Edge.Properties>) {
+  const source = edge.getSourceNode()!.getBBox()
+  const target = edge.getTargetNode()!.getBBox()
+  const gap = target.x - source.x - source.width
+  const fix = source.width
+  const x = source.x + fix + gap / 2
+  edge.setVertices([
+    { x, y: source.center.y },
+    { x, y: target.center.y },
+  ])
+}
+
+function setEdgeVerticesRL(edge: Edge<Edge.Properties>) {
+  const source = edge.getSourceNode()!.getBBox()
+  const target = edge.getTargetNode()!.getBBox()
+  const gap = source.x + source.width - target.x - target.width
+  const x = source.x - gap / 2
+  edge.setVertices([
+    { x, y: source.center.y },
+    { x, y: target.center.y },
+  ])
+}
+
+function setEdgeVerticesTB(edge: Edge<Edge.Properties>) {
+  const source = edge.getSourceNode()!.getBBox()
+  const target = edge.getTargetNode()!.getBBox()
+  const gap = target.y - source.y - source.height
+  const y = source.y + source.height + gap / 2
+  edge.setVertices([
+    { x: source.center.x, y },
+    { x: target.center.x, y },
+  ])
+}
+
+function setEdgeVerticesBT(edge: Edge<Edge.Properties>) {
+  const source = edge.getSourceNode()!.getBBox()
+  const target = edge.getTargetNode()!.getBBox()
+  const gap = source.y + source.height - target.y - target.height
+  const y = source.y - gap / 2
+  edge.setVertices([
+    { x: source.center.x, y },
+    { x: target.center.x, y }
+  ])
 }
 
 function createEdge(source: Cell, target: Cell) {
