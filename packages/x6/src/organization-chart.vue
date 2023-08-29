@@ -97,11 +97,9 @@ function autoLayout() {
   const g = new dagre.graphlib.Graph()
   g.setGraph({ rankdir: props.direction, nodesep: props.nodeSep, ranksep: props.rankSep })
   g.setDefaultEdgeLabel(() => ({}))
-
-  const width = 260
-  const height = 88
   nodes.forEach((node) => {
-    g.setNode(node.id, { width, height })
+    const size = node.getSize()
+    g.setNode(node.id, { width: size.width, height: size.height })
   })
 
   edges.forEach((edge) => {
