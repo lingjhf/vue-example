@@ -164,10 +164,10 @@ function setGraph(value: Graph) {
       return false
     }
     const z = value.zoom()
-    if (e.deltaY < 0 && z > maxZoom) {
+    if (e.deltaY < 0 && z >= maxZoom) {
       return false
     }
-    if (e.deltaY > 0 && z < minZoom) {
+    if (e.deltaY > 0 && z <= minZoom) {
       return false
     }
     return true
