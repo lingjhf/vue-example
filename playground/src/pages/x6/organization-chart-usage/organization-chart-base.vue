@@ -1,8 +1,25 @@
 <template>
-  <div class='chart-container'>
-    <div class='example-area'>
+  <div class=' h-full w-full flex  justify-center items-center'>
+    <div class='example-area  flex flex-col items-center'>
+      <div class='my-4'>
+        <el-radio-group v-model='direction'>
+          <el-radio label='LR'>
+            左到右
+          </el-radio>
+          <el-radio label='RL'>
+            右到左
+          </el-radio>
+          <el-radio label='TB'>
+            上到下
+          </el-radio>
+          <el-radio label='BT'>
+            下到上
+          </el-radio>
+        </el-radio-group>
+      </div>
       <organization-chart
         :data='data'
+        :direction='direction'
         :render-edge='renderEdge'
         :render-node='renderNode'
         :set-graph='setGraph'
@@ -15,7 +32,9 @@
 <script setup lang="ts">
 
 import { Shape, Edge, Graph } from '@antv/x6'
-import { OrganizationChart, OrganizationNode } from '@example/x6'
+import { OrganizationChart, OrganizationNode, OrganizationChartDirection } from '@example/x6'
+import { ElRadioGroup, ElRadio } from 'element-plus'
+import { ref } from 'vue'
 
 const data: OrganizationNode[] = [
   {
@@ -102,6 +121,8 @@ const data: OrganizationNode[] = [
   },
 ]
 
+const direction = ref<OrganizationChartDirection>('LR')
+
 function setGraph(graph: Graph) {
   graph.zoomTo(0.8).enableMouseWheel().enablePanning()
   graph.mousewheel.options.mousewheel.modifiers = ['ctrl', 'meta']
@@ -145,16 +166,6 @@ function renderEdge(edge: Edge<Edge.Properties>) {
 </script>
 
 <style>
-body {
-  margin: 0;
-}
-.chart-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .example-area {
   width: 80%;
   height: 80%;
