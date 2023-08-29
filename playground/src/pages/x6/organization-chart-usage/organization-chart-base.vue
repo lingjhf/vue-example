@@ -1,8 +1,11 @@
 <template>
   <div class=' h-full w-full flex  justify-center items-center'>
     <div class='example-area  flex flex-col items-center'>
-      <div class='my-4 flex items-center w-full px-4 box-border'>
-        <el-radio-group v-model='direction'>
+      <div class='my-2 flex items-center w-full px-4 box-border'>
+        <el-radio-group
+          v-model='direction'
+          class='mr-16px'
+        >
           <el-radio label='LR'>
             左到右
           </el-radio>
@@ -27,9 +30,31 @@
           />
         </div>
       </div>
+      <div class='px-4 mb-2 w-full flex box-border'>
+        <div class='flex flex-col mr-2'>
+          <span class='text-xs mb-1'>层级间距</span>
+          <el-input-number
+            v-model='rankSep'
+            controls-position='right'
+            :max='300'
+            :min='1'
+          />
+        </div>
+        <div class='flex flex-col'>
+          <span class='text-xs mb-1'>节点间距</span>
+          <el-input-number
+            v-model='nodeSep'
+            controls-position='right'
+            :max='300'
+            :min='1'
+          />
+        </div>
+      </div>
       <organization-chart
         :data='data'
         :direction='direction'
+        :node-sep='nodeSep'
+        :rank-sep='rankSep'
         :render-edge='renderEdge'
         :render-node='renderNode'
         :set-graph='setGraph'
@@ -43,7 +68,7 @@
 
 import { Shape, Edge, Graph } from '@antv/x6'
 import { OrganizationChart, OrganizationNode, OrganizationChartDirection } from '@example/x6'
-import { ElRadioGroup, ElRadio, ElSlider } from 'element-plus'
+import { ElRadioGroup, ElRadio, ElSlider, ElInputNumber } from 'element-plus'
 import { ref } from 'vue'
 
 const data: OrganizationNode[] = [
@@ -137,6 +162,8 @@ const maxZoom = 2
 const zoomStep = 0.08
 const zoom = ref(1)
 const direction = ref<OrganizationChartDirection>('LR')
+const rankSep = ref(30)
+const nodeSep = ref(30)
 
 function zoomFormatTooltip (val: number) {
   let v = Math.round(val * 100)

@@ -70,9 +70,17 @@ watch(
   }
 )
 
-watch([() => props.direction, () => props.nodeSep, () => props.rankSep], () => {
-  autoLayout()
-})
+watch(
+  [() => props.direction, () => props.nodeSep, () => props.rankSep],
+  () => {
+    nextTick(() => {
+      autoLayout()
+    })
+  }, 
+  {
+    immediate: true
+  }
+)
 
 function initNodes(tree: OrganizationNode[]) {
   const rawNodes = treeToList(tree)
