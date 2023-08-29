@@ -1,5 +1,5 @@
 <template>
-  <div class='container'>
+  <div class='chart-container'>
     <div class='example-area'>
       <organization-chart
         :data='data'
@@ -148,7 +148,7 @@ function renderEdge(edge: Edge<Edge.Properties>) {
 body {
   margin: 0;
 }
-.container {
+.chart-container {
   width: 100%;
   height: 100%;
   display: flex;
