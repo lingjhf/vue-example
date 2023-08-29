@@ -12,7 +12,11 @@
     "antv",
     "unocss",
     "amap",
-    "echarts"
+    "echarts",
+    "graphlib",
+    "rankdir",
+    "nodesep",
+    "ranksep",
   ],
   "cSpell.ignorePaths": [
     "package-lock.json",

@@ -156,8 +156,8 @@ body {
   justify-content: center;
 }
 .example-area {
-  width: 70%;
-  height: 70%;
+  width: 80%;
+  height: 80%;
   box-shadow: 0 0 10px 1px #e9e9e9;
 }
 </style>

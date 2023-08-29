@@ -28,16 +28,18 @@ const props = withDefaults(
   defineProps<{
     data?: OrganizationNode[];
     direction?: 'LR' | 'RL' | 'TB' | 'BT';
-    nodesep?: number;
-    ranksep?: number;
+    nodeSep?: number;
+    rankSep?: number;
+    autoResize?: boolean;
     setGraph?: (graph: Graph) => void;
     renderNode: (node: OrganizationNode) => Node<Node.Properties>;
     renderEdge: (edge: Edge<Edge.Properties>) => void;
   }>(),
   {
     direction: 'LR',
-    nodesep: 16,
-    ranksep: 30,
+    nodeSep: 16,
+    rankSep: 30,
+    autoResize: true,
     setGraph: undefined,
     data: () => [],
   }
@@ -53,6 +55,7 @@ watch(
       if (!graph) {
         graph = new Graph({
           container: containerRef.value,
+          autoResize: props.autoResize,
           interacting: false,
         })
         props.setGraph?.(graph)
@@ -65,7 +68,7 @@ watch(
   }
 )
 
-watch([() => props.direction, () => props.nodesep, () => props.ranksep], () => {
+watch([() => props.direction, () => props.nodeSep, () => props.rankSep], () => {
   autoLayout()
 })
 
@@ -90,7 +93,7 @@ function autoLayout() {
   const nodes = graph.getNodes()
   const edges = graph.getEdges()
   const g = new dagre.graphlib.Graph()
-  g.setGraph({ rankdir: 'LR', nodesep: props.nodesep, ranksep: props.ranksep })
+  g.setGraph({ rankdir: 'LR', nodesep: props.nodeSep, ranksep: props.rankSep })
   g.setDefaultEdgeLabel(() => ({}))
 
   const width = 260
