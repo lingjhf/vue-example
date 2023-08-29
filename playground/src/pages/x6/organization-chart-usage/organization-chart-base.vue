@@ -1,7 +1,7 @@
 <template>
   <div class=' h-full w-full flex  justify-center items-center'>
     <div class='example-area  flex flex-col items-center'>
-      <div class='my-4'>
+      <div class='my-4 flex items-center w-full px-4 box-border'>
         <el-radio-group v-model='direction'>
           <el-radio label='LR'>
             左到右
@@ -16,6 +16,16 @@
             下到上
           </el-radio>
         </el-radio-group>
+        <div class='w-[200px] ml-auto'>
+          <el-slider
+            v-model='zoom'
+            :format-tooltip='zoomFormatTooltip'
+            :max='maxZoom'
+            :min='minZoom'
+            :step='zoomStep'
+            @input='zoomChange'
+          />
+        </div>
       </div>
       <organization-chart
         :data='data'
@@ -33,7 +43,7 @@
 
 import { Shape, Edge, Graph } from '@antv/x6'
 import { OrganizationChart, OrganizationNode, OrganizationChartDirection } from '@example/x6'
-import { ElRadioGroup, ElRadio } from 'element-plus'
+import { ElRadioGroup, ElRadio, ElSlider } from 'element-plus'
 import { ref } from 'vue'
 
 const data: OrganizationNode[] = [
@@ -121,17 +131,57 @@ const data: OrganizationNode[] = [
   },
 ]
 
+let graph: Graph
+const minZoom = 0.25
+const maxZoom = 2
+const zoomStep = 0.08
+const zoom = ref(1)
 const direction = ref<OrganizationChartDirection>('LR')
 
-function setGraph(graph: Graph) {
-  graph.zoomTo(0.8).enableMouseWheel().enablePanning()
-  graph.mousewheel.options.mousewheel.modifiers = ['ctrl', 'meta']
+function zoomFormatTooltip (val: number) {
+  let v = Math.round(val * 100)
+  if (v > maxZoom * 100) {
+    v = maxZoom * 100
+  } else if (v < minZoom * 100) {
+    v = minZoom * 100
+  }
+  return `${v}%`
+}
+
+function zoomChange(val: number | number[]) {
+  if (!Array.isArray(val)) {
+    graph.zoomTo(val)
+  }
+}
+
+function setGraph(value: Graph) {
+
+  value.zoomTo(zoom.value).enableMouseWheel().enablePanning()
+  value.mousewheel.options.mousewheel.modifiers = ['ctrl', 'meta']
+  value.mousewheel.options.mousewheel.guard = (e) => {
+    e.preventDefault()
+    if (!e.ctrlKey || !e.metaKey) {
+      return false
+    }
+    const z = value.zoom()
+    if (e.deltaY < 0 && z > maxZoom) {
+      return false
+    }
+    if (e.deltaY > 0 && z < minZoom) {
+      return false
+    }
+    return true
+  }
+  value.on('scale', ({ sy }) => {
+    zoom.value = sy
+  })
+  graph = value
 }
 
 function renderNode(node: OrganizationNode) {
   return new Shape.Rect({
     width: 100,
-    height: 40,
+    height: 100,
     markup: [
       {
         tagName: 'rect',
