@@ -8,7 +8,7 @@
     <div class='flex items-center'>
       <div class='h-full w-200px flex-shrink-0'>
         <el-scrollbar class='h-full'>
-          <el-menu
+          <!-- <el-menu
             class='h-[calc(100vh-60px)]'
             :default-active='activeMenu'
             router
@@ -43,7 +43,7 @@
               </template>
               <el-menu-item />
             </el-sub-menu>
-          </el-menu>
+          </el-menu> -->
         </el-scrollbar>
       </div>
 
