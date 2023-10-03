@@ -122,7 +122,7 @@ function autoLayout() {
     const node = graph.getCellById(id) as Node
     if (node) {
       const pos = g.node(id)
-      node.position(pos.x, pos.y)
+      node.position(pos.x, pos.y, { silent: true })
     }
   })
 

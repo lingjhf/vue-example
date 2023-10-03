@@ -1,13 +1,64 @@
 <template>
-  <div class='container'>
-    <div class='example-area'>
+  <div class=' h-full w-full flex  justify-center items-center'>
+    <div class='example-area  flex flex-col items-center'>
+      <div class='my-2 flex items-center w-full px-4 box-border'>
+        <el-radio-group
+          v-model='direction'
+          class='mr-16px'
+        >
+          <el-radio label='LR'>
+            左到右
+          </el-radio>
+          <el-radio label='RL'>
+            右到左
+          </el-radio>
+          <el-radio label='TB'>
+            上到下
+          </el-radio>
+          <el-radio label='BT'>
+            下到上
+          </el-radio>
+        </el-radio-group>
+        <div class='w-[200px] ml-auto'>
+          <el-slider
+            v-model='zoom'
+            :format-tooltip='zoomFormatTooltip'
+            :max='maxZoom'
+            :min='minZoom'
+            :step='zoomStep'
+            @input='zoomChange'
+          />
+        </div>
+      </div>
+      <div class='px-4 mb-2 w-full flex box-border'>
+        <div class='flex flex-col mr-2'>
+          <span class='text-xs mb-1'>层级间距</span>
+          <el-input-number
+            v-model='rankSep'
+            controls-position='right'
+            :max='300'
+            :min='1'
+          />
+        </div>
+        <div class='flex flex-col'>
+          <span class='text-xs mb-1'>节点间距</span>
+          <el-input-number
+            v-model='nodeSep'
+            controls-position='right'
+            :max='300'
+            :min='1'
+          />
+        </div>
+      </div>
       <organization-chart
         :data='data'
+        :direction='direction'
+        :node-sep='nodeSep'
+        :rank-sep='rankSep'
         :render-edge='renderEdge'
         :render-node='renderNode'
         :set-graph='setGraph'
         style='width: 100%; height: 100%'
-        @click='test'
       />
     </div>
   </div>
@@ -16,7 +67,9 @@
 <script setup lang="ts">
 
 import { Shape, Edge, Graph } from '@antv/x6'
-import { OrganizationChart, OrganizationNode } from '@example/x6'
+import { OrganizationChart, OrganizationNode, OrganizationChartDirection } from '@example/x6'
+import { ElRadioGroup, ElRadio, ElSlider, ElInputNumber } from 'element-plus'
+import { ref } from 'vue'
 
 const data: OrganizationNode[] = [
   {
@@ -103,19 +156,59 @@ const data: OrganizationNode[] = [
   },
 ]
 
-function test() {
-  console.log('ok')
+let graph: Graph
+const minZoom = 0.25
+const maxZoom = 2
+const zoomStep = 0.08
+const zoom = ref(1)
+const direction = ref<OrganizationChartDirection>('LR')
+const rankSep = ref(30)
+const nodeSep = ref(30)
+
+function zoomFormatTooltip (val: number) {
+  let v = Math.round(val * 100)
+  if (v > maxZoom * 100) {
+    v = maxZoom * 100
+  } else if (v < minZoom * 100) {
+    v = minZoom * 100
+  }
+  return `${v}%`
 }
 
-function setGraph(graph: Graph) {
-  graph.zoomTo(0.8).enableMouseWheel().enablePanning()
-  graph.mousewheel.options.mousewheel.modifiers = ['ctrl', 'meta']
+function zoomChange(val: number | number[]) {
+  if (!Array.isArray(val)) {
+    graph.zoomTo(val)
+  }
+}
+
+function setGraph(value: Graph) {
+
+  value.zoomTo(zoom.value).enableMouseWheel().enablePanning()
+  value.mousewheel.options.mousewheel.modifiers = ['ctrl', 'meta']
+  value.mousewheel.options.mousewheel.guard = (e) => {
+    e.preventDefault()
+    if (!e.ctrlKey && !e.metaKey) {
+      return false
+    }
+    const z = value.zoom()
+    if (e.deltaY < 0 && z >= maxZoom) {
+      return false
+    }
+    if (e.deltaY > 0 && z <= minZoom) {
+      return false
+    }
+    return true
+  }
+  value.on('scale', ({ sy }) => {
+    zoom.value = sy
+  })
+  graph = value
 }
 
 function renderNode(node: OrganizationNode) {
   return new Shape.Rect({
     width: 100,
-    height: 40,
+    height: 100,
     markup: [
       {
         tagName: 'rect',
@@ -150,19 +243,9 @@ function renderEdge(edge: Edge<Edge.Properties>) {
 </script>
 
 <style>
-body {
-  margin: 0;
-}
-.container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .example-area {
-  width: 70%;
-  height: 70%;
+  width: 80%;
+  height: 80%;
   box-shadow: 0 0 10px 1px #e9e9e9;
 }
 </style>
